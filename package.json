@@ -2,9 +2,6 @@
   "name": "euphuism-2026",
   "type": "module",
   "version": "1.0.0",
-  "engines": {
-    "node": ">=20.0.0"
-  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -36,5 +33,10 @@
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.172.0",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "@rollup/rollup-linux-x64-gnu": "npm:@rollup/wasm-node"
+    }
   }
 }
