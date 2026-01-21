@@ -70,7 +70,7 @@ export const PreloaderText: React.FC<PreloaderTextProps> = ({ progress }) => {
 
   return (
     <div 
-      className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-8"
+      className="relative z-10 flex flex-col items-center justify-center h-screen min-h-screen px-4 sm:px-8 pb-16 sm:pb-0"
       style={{ fontFamily: 'var(--font-body)' }}
     >
 
@@ -84,7 +84,7 @@ export const PreloaderText: React.FC<PreloaderTextProps> = ({ progress }) => {
             duration: 0.4,
             ease: [0.22, 1, 0.36, 1]
           }}
-          className="text-center max-w-4xl mx-auto"
+          className="text-center max-w-xs sm:max-w-2xl md:max-w-4xl mx-auto"
         >
           {/* TextGenerateEffect for sentence-by-sentence animation */}
           <TextGenerateEffect 

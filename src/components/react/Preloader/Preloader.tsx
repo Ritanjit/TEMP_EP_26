@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedBackground } from './AnimatedBackground';
 import { PreloaderText } from './PreloaderText';
+import { useImagePreloader } from '../../../hooks/useImagePreloader';
 
 /**
  * Preloader.tsx
@@ -23,6 +24,27 @@ const STORAGE_KEY = 'euphuism2026_preloader_seen';
 // REPLACE THIS URL with your actual music file path
 const BACKGROUND_MUSIC_URL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3';
 
+// Hero section images to preload during preloader story
+const HERO_IMAGES_TO_PRELOAD = [
+    '/hero/backdrop1.png',
+    '/hero/backdrop2.png',
+    '/hero/tree1.png',
+    '/hero/tree2.png',
+    '/hero/bihu.png',
+    '/Euphuism26 logo m2.png'
+];
+
+// ============================================
+// STORY START DELAY CONFIGURATION
+// ============================================
+// Delay (in milliseconds) before the story text starts animating.
+// Increase this value to wait longer before the story begins.
+// Decrease this value to start the story sooner.
+// Set to 0 for no delay (immediate start).
+// Default: 2000ms (2 seconds)
+const STORY_START_DELAY_MS = 1500;
+// ============================================
+
 export const Preloader: React.FC<PreloaderProps> = ({
     minDuration = 8000,
     skipForReturningVisitors = false,
@@ -30,9 +52,16 @@ export const Preloader: React.FC<PreloaderProps> = ({
 }) => {
     const [progress, setProgress] = useState(0);
     const [isVisible, setIsVisible] = useState(true);
+    const [storyStarted, setStoryStarted] = useState(false);
     const [isExiting, setIsExiting] = useState(false);
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+    const [storyComplete, setStoryComplete] = useState(false);
+    const [exitAnimationClass, setExitAnimationClass] = useState('');
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const preloaderRef = useRef<HTMLDivElement | null>(null);
+
+    // Preload hero images in background while story plays
+    const { isLoaded: imagesLoaded, progress: imageProgress } = useImagePreloader(HERO_IMAGES_TO_PRELOAD);
 
     // Initial check for skipped preloader
     useEffect(() => {
@@ -49,10 +78,10 @@ export const Preloader: React.FC<PreloaderProps> = ({
     // Initialize Audio
     useEffect(() => {
         if (!isVisible) return;
-        
+
         audioRef.current = new Audio(BACKGROUND_MUSIC_URL);
         audioRef.current.loop = true;
-        
+
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -61,9 +90,21 @@ export const Preloader: React.FC<PreloaderProps> = ({
         };
     }, [isVisible]);
 
-    // Simulate loading progress
+    // Start story after delay
     useEffect(() => {
         if (!isVisible || isExiting) return;
+
+        // Wait for STORY_START_DELAY_MS before starting the story
+        const delayTimer = setTimeout(() => {
+            setStoryStarted(true);
+        }, STORY_START_DELAY_MS);
+
+        return () => clearTimeout(delayTimer);
+    }, [isVisible, isExiting]);
+
+    // Simulate loading progress (only runs after story has started)
+    useEffect(() => {
+        if (!isVisible || isExiting || !storyStarted) return;
 
         const startTime = Date.now();
         let animationFrame: number;
@@ -83,7 +124,8 @@ export const Preloader: React.FC<PreloaderProps> = ({
             if (newProgress < 100) {
                 animationFrame = requestAnimationFrame(updateProgress);
             } else {
-                handleComplete();
+                // Story timing complete - mark as ready
+                setStoryComplete(true);
             }
         };
 
@@ -92,7 +134,14 @@ export const Preloader: React.FC<PreloaderProps> = ({
         return () => {
             if (animationFrame) cancelAnimationFrame(animationFrame);
         };
-    }, [isVisible, minDuration, isExiting]);
+    }, [isVisible, minDuration, isExiting, storyStarted]);
+
+    // Exit when BOTH story is complete AND images are loaded
+    useEffect(() => {
+        if (storyComplete && imagesLoaded && !isExiting) {
+            handleComplete();
+        }
+    }, [storyComplete, imagesLoaded, isExiting]);
 
     const easeOutQuart = (x: number): number => {
         return 1 - Math.pow(1 - x, 4);
@@ -100,12 +149,15 @@ export const Preloader: React.FC<PreloaderProps> = ({
 
     const handleComplete = useCallback(() => {
         if (isExiting) return;
-        
+
         if (typeof window !== 'undefined') {
             localStorage.setItem(STORAGE_KEY, 'true');
         }
 
         setIsExiting(true);
+
+        // Apply animate.css zoomOutUp exit animation
+        setExitAnimationClass('animate__animated animate__fadeOutUp');
 
         // Fade out music if playing
         if (audioRef.current && isMusicPlaying) {
@@ -119,15 +171,31 @@ export const Preloader: React.FC<PreloaderProps> = ({
             }, 100);
         }
 
-        setTimeout(() => {
-            setIsVisible(false);
-            onComplete?.();
-        }, 800);
+        // Listen for animation end, then hide preloader
+        const element = preloaderRef.current;
+        if (element) {
+            const handleAnimationEnd = () => {
+                setIsVisible(false);
+                onComplete?.();
+                element.removeEventListener('animationend', handleAnimationEnd);
+            };
+            element.addEventListener('animationend', handleAnimationEnd);
+        } else {
+            // Fallback if ref not available
+            setTimeout(() => {
+                setIsVisible(false);
+                onComplete?.();
+            }, 800);
+        }
     }, [onComplete, isMusicPlaying, isExiting]);
 
     const skipStory = () => {
         setProgress(100);
-        handleComplete();
+        setStoryComplete(true);
+        // If images aren't loaded yet, force complete anyway (user chose to skip)
+        if (!imagesLoaded) {
+            handleComplete();
+        }
     };
 
     const toggleMusic = () => {
@@ -146,18 +214,17 @@ export const Preloader: React.FC<PreloaderProps> = ({
     return (
         <AnimatePresence>
             {isVisible && (
-                <motion.div
-                    className="fixed inset-0 z-[9999]"
-                    initial={{ y: 0 }}
-                    exit={{ y: '-100%' }}
-                    transition={{
-                        duration: 0.8,
-                        ease: [0.22, 1, 0.36, 1]
-                    }}
-                    style={{ willChange: 'transform' }}
+                <div
+                    ref={preloaderRef}
+                    className={`fixed inset-0 z-[9999] ${exitAnimationClass}`}
+                    style={{
+                        willChange: 'transform, opacity',
+                        // Custom animate.css duration
+                        '--animate-duration': '0.8s'
+                    } as React.CSSProperties}
                 >
                     <AnimatedBackground />
-                    <PreloaderText progress={progress} />
+                    {storyStarted && <PreloaderText progress={progress} />}
 
                     {/* Preloader Controls */}
                     <div className="absolute top-4 lg:top-8 right-4 lg:right-8 z-50 flex flex-col-reverse lg:flex-row items-end lg:items-center gap-8 lg:gap-7">
@@ -168,10 +235,10 @@ export const Preloader: React.FC<PreloaderProps> = ({
                                 <>
                                     <motion.div
                                         className="absolute rounded-full"
-                                        style={{ 
-                                            width: '40px', 
+                                        style={{
+                                            width: '40px',
                                             height: '40px',
-                                            border: '2px solid var(--euphuism-beige)' 
+                                            border: '2px solid var(--euphuism-beige)'
                                         }}
                                         initial={{ scale: 1, opacity: 0 }}
                                         animate={{
@@ -187,10 +254,10 @@ export const Preloader: React.FC<PreloaderProps> = ({
                                     />
                                     <motion.div
                                         className="absolute rounded-full"
-                                        style={{ 
-                                            width: '40px', 
+                                        style={{
+                                            width: '40px',
                                             height: '40px',
-                                            border: '2px solid var(--euphuism-beige)' 
+                                            border: '2px solid var(--euphuism-beige)'
                                         }}
                                         initial={{ scale: 1, opacity: 0 }}
                                         animate={{
@@ -224,7 +291,7 @@ export const Preloader: React.FC<PreloaderProps> = ({
                                 title={!isMusicPlaying ? "🎵 Click to play music" : "Pause music"}
                             >
                                 {/* Hover background fill */}
-                                <span 
+                                <span
                                     className="absolute inset-0 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100"
                                     style={{ backgroundColor: 'var(--euphuism-beige)' }}
                                 />
@@ -237,32 +304,66 @@ export const Preloader: React.FC<PreloaderProps> = ({
                             </motion.button>
                         </div>
 
-                        {/* Skip Story Button - Transparent with hover fill */}
-                        <button
-                            onClick={skipStory}
-                            className="relative inline-flex items-center justify-center overflow-hidden tracking-wider rounded-md cursor-pointer transition-all duration-300 group"
-                            style={{
-                                backgroundColor: 'transparent',
-                                border: '2px solid var(--euphuism-beige)',
-                                height: '40px',
-                                paddingLeft: '20px',
-                                paddingRight: '20px',
-                            }}
-                        >
-                            {/* Hover background fill */}
-                            <span 
-                                className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-100"
-                                style={{ backgroundColor: 'var(--euphuism-beige)' }}
-                            />
-                            {/* Button text */}
-                            <span 
-                                className="relative text-sm font-bold uppercase flex items-center gap-2 transition-colors duration-300"
-                                style={{ color: 'var(--euphuism-beige)' }}
+                        {/* Skip Story / Loading Progress Button */}
+                        {imagesLoaded ? (
+                            // Skip Story Button - only shows when images are loaded
+                            <button
+                                onClick={skipStory}
+                                className="relative inline-flex items-center justify-center overflow-hidden tracking-wider rounded-md cursor-pointer transition-all duration-300 group"
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: '2px solid var(--euphuism-beige)',
+                                    height: '40px',
+                                    paddingLeft: '20px',
+                                    paddingRight: '20px',
+                                }}
                             >
-                                <span className="group-hover:text-[var(--euphuism-green)]">Skip Story</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-all duration-300 group-hover:translate-x-1" style={{ stroke: 'var(--euphuism-beige)' }}><polyline points="13 17 18 12 13 7" className="group-hover:stroke-[var(--euphuism-green)]"></polyline><polyline points="6 17 11 12 6 7" className="group-hover:stroke-[var(--euphuism-green)]"></polyline></svg>
-                            </span>
-                        </button>
+                                {/* Hover background fill */}
+                                <span
+                                    className="absolute inset-0 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                                    style={{ backgroundColor: 'var(--euphuism-beige)' }}
+                                />
+                                {/* Button text */}
+                                <span
+                                    className="relative text-sm font-bold uppercase flex items-center gap-2 transition-colors duration-300"
+                                    style={{ color: 'var(--euphuism-beige)' }}
+                                >
+                                    <span className="group-hover:text-[var(--euphuism-green)]">Skip Story</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-all duration-300 group-hover:translate-x-1" style={{ stroke: 'var(--euphuism-beige)' }}><polyline points="13 17 18 12 13 7" className="group-hover:stroke-[var(--euphuism-green)]"></polyline><polyline points="6 17 11 12 6 7" className="group-hover:stroke-[var(--euphuism-green)]"></polyline></svg>
+                                </span>
+                            </button>
+                        ) : (
+                            // Loading Progress Button - non-functional, shows loading %
+                            <div
+                                className="relative inline-flex items-center justify-center overflow-hidden tracking-wider rounded-md transition-all duration-300"
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: '2px solid var(--euphuism-beige)',
+                                    height: '40px',
+                                    paddingLeft: '20px',
+                                    paddingRight: '20px',
+                                    opacity: 0.7,
+                                    cursor: 'default',
+                                }}
+                            >
+                                {/* Progress bar fill */}
+                                <span
+                                    className="absolute inset-0 transition-all duration-500 ease-out"
+                                    style={{
+                                        backgroundColor: 'var(--euphuism-beige)',
+                                        opacity: 0.2,
+                                        width: `${imageProgress}%`,
+                                    }}
+                                />
+                                {/* Loading text */}
+                                <span
+                                    className="relative text-sm font-bold uppercase flex items-center gap-2"
+                                    style={{ color: 'var(--euphuism-beige)' }}
+                                >
+                                    <span>Loading {imageProgress}%</span>
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Exit flash effect */}
@@ -277,7 +378,7 @@ export const Preloader: React.FC<PreloaderProps> = ({
                             />
                         )}
                     </AnimatePresence> */}
-                </motion.div>
+                </div>
             )}
         </AnimatePresence>
     );

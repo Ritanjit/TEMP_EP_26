@@ -79,7 +79,7 @@ body {
   padding: 0;
   font-family: var(--font-body); /* Quicksand Medium as default body font */
   font-weight: 500; /* Medium weight */
-  background-color: var(--color-bg-dark);
+  background-color: var(--euphuism-beige);
   color: var(--color-text-primary);
 }
 

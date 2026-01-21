@@ -23,6 +23,7 @@ export default function HeroParallax() {
   // Use a motion value that we'll update manually based on scroll
   const scrollProgress = useMotionValue(0);
   const [isClient, setIsClient] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const rafRef = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -53,6 +54,13 @@ export default function HeroParallax() {
   useEffect(() => {
     setIsClient(true);
 
+    // Check if mobile on mount and resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     // Initial call
     handleScroll();
 
@@ -68,6 +76,7 @@ export default function HeroParallax() {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('scroll', handleScroll);
       document.body?.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
     };
   }, [handleScroll]);
 
@@ -80,14 +89,33 @@ export default function HeroParallax() {
   // Backdrop: Zoom in (1 to 1.4)
   const backdropScale = useTransform(scrollProgress, [0, 1], [1, 1.4]);
 
-  // Logo: Start visible and drop down + zoom in as scroll progresses
-  // At start (0): logo is at y=0, opacity 1, scale 0.95
-  // At 0.5: logo is at y=50 (dropped slightly), scale 1.1
-  const logoY = useTransform(scrollProgress, [0, 0.5], [0, 80]);
-  const logoScale = useTransform(scrollProgress, [0, 0.5], [0.95, 1.2]);
+  // Logo: Start hidden behind backdrop at bottom, rises up and zooms as scroll progresses
+  // Mobile: Faster animation (0.3), larger end scale (1.5)
+  // Desktop: Slightly slower (0.4), moderate scale (1.2)
+  const logoAnimationEnd = isMobile ? 0.3 : 0.4;
+  const logoY = useTransform(scrollProgress, [0, logoAnimationEnd], ['50vh', '-120%']);
+  const logoScale = useTransform(scrollProgress, [0, logoAnimationEnd], [0, isMobile ? 1.5 : 1.2]);
+  const logoZIndex = useTransform(scrollProgress, [0, 0.2], [5, 15]);
+  
+  // Track when logo should become sticky (after parallax completes)
+  const [isLogoSticky, setIsLogoSticky] = useState(false);
+  
+  // Update sticky state based on scroll progress (matches animation end)
+  useEffect(() => {
+    const unsubscribe = scrollProgress.on('change', (value) => {
+      setIsLogoSticky(value >= (isMobile ? 0.3 : 0.4));
+    });
+    return () => unsubscribe();
+  }, [scrollProgress, isMobile]);
 
   // Scroll indicator fade out
   const scrollIndicatorOpacity = useTransform(scrollProgress, [0, 0.15], [1, 0]);
+
+  // Bihu image: Scale down + fade out + move down as user scrolls
+  // z-index 25 = above trees (20) but below logo's final z-index (100)
+  const bihuScale = useTransform(scrollProgress, [0, 0.5], [1, 0.3]);
+  const bihuOpacity = useTransform(scrollProgress, [0, 0.4], [1, 0]);
+  const bihuY = useTransform(scrollProgress, [0, 0.5], [0, 200]);
 
   // Don't render until client-side to avoid hydration issues
   if (!isClient) {
@@ -118,23 +146,25 @@ export default function HeroParallax() {
         style={{
           position: 'sticky',
           top: 0,
-          height: '100vh',
+          // Reduce height on mobile to decrease gap with backdrop
+          height: isMobile ? '45vh' : '100vh',
           width: '100%',
           overflow: 'hidden',
           backgroundColor: '#EFE6C1', // Beige fallback
         }}
       >
-        {/* Backdrop Layer - Tea field scenery */}
+        {/* Backdrop Layer 1 - Tea field scenery */}
         <motion.div
           style={{
             position: 'absolute',
             inset: 0,
             scale: backdropScale,
             transformOrigin: 'center center',
+            zIndex: 10, // Logo starts at z-index 5, so it's hidden behind this
           }}
         >
           <img
-            src="/hero/backdrop.png"
+            src="/hero/backdrop1.png"
             alt="Scenic tea field backdrop"
             style={{
               width: '100%',
@@ -145,25 +175,61 @@ export default function HeroParallax() {
           />
         </motion.div>
 
-        {/* Logo - Visible from start, drops down and zooms as user scrolls */}
+        {/* Backdrop Layer 2 - Tea field + mountain scenery */}
         <motion.div
           style={{
             position: 'absolute',
-            top: '10%',
+            inset: 0,
+            scale: backdropScale,
+            transformOrigin: 'center center',
+            zIndex: 5, // Logo starts at z-index 5, so it's hidden behind this
+          }}
+        >
+          <img
+            src="/hero/backdrop2.png"
+            alt="Scenic tea field & mountains backdrop"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center bottom',
+            }}
+          />
+        </motion.div>
+
+        {/* Logo - Starts hidden behind backdrop 1, rises up and becomes sticky at top */}
+        <motion.div
+          className={isLogoSticky ? 'animate__animated animate__slideInDown -translate-x-50/100' : ''}
+          style={{
+            position: isLogoSticky ? 'fixed' : 'absolute',
+            // When sticky: positioned at top; When parallax: positioned at bottom
+            ...(isLogoSticky 
+              ? { top: isMobile ? '10px' : '20px', bottom: 'auto' }
+              : { bottom: '10%', top: 'auto' }
+            ),
             left: '50%',
             x: '-50%',
-            y: logoY,
-            scale: logoScale,
-            zIndex: 10,
-          }}
+            // When sticky: no Y transform; When parallax: use animated Y
+            y: isLogoSticky ? 0 : logoY,
+            // Keep scale at 1 (end value of parallax) when sticky for seamless transition
+            scale: isLogoSticky ? 1 : logoScale,
+            zIndex: isLogoSticky ? 100 : logoZIndex,
+            // Custom animation duration for slideInDown
+            '--animate-duration': '0.5s',
+          } as React.CSSProperties}
         >
           <img
             src="/Euphuism26 logo m2.png"
             alt="Euphuism 2026 - Roots & Resilience"
             style={{
-              width: 'min(85vw, 650px)',
+              // Desktop: Sticky = smaller (300px), Parallax = larger (min(85vw, 650px))
+              // Mobile: Always min(60vw, 400px)
+              width: isMobile 
+                ? 'min(60vw, 400px)' 
+                : (isLogoSticky ? '300px' : 'min(85vw, 650px)'),
               height: 'auto',
               filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.3))',
+              transition: 'width 0.5s ease-in-out', // Smooth transition for size change
             }}
           />
         </motion.div>
@@ -218,41 +284,29 @@ export default function HeroParallax() {
           />
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Bihu Image - Above trees, below final logo position */}
         <motion.div
           style={{
             position: 'absolute',
-            bottom: '2rem',
+            bottom: 0,
             left: '50%',
             x: '-50%',
-            opacity: scrollIndicatorOpacity,
-            zIndex: 30,
+            y: bihuY,
+            scale: bihuScale,
+            opacity: bihuOpacity,
+            zIndex: 25, // Above trees (20), below logo's final z-index (100)
+            transformOrigin: 'bottom center',
           }}
         >
-          <div
+          <img
+            src="/hero/bihu.png"
+            alt="Bihu celebration"
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.5rem',
-              color: '#2D3E10',
-              fontFamily: 'var(--font-heading, system-ui)',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              fontSize: '0.875rem',
+              width: isMobile ? 'min(80vw, 350px)' : 'min(50vw, 500px)',
+              height: 'auto',
+              filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.2))',
             }}
-          >
-            <span>Scroll to Explore</span>
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 5v14M5 12l7 7 7-7" />
-              </svg>
-            </motion.div>
-          </div>
+          />
         </motion.div>
       </div>
     </div>

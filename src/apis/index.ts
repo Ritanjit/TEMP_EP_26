@@ -5,7 +5,7 @@
  * Import from here: import { getEvents, getSponsors } from '@apis';
  */
 
-export * from './events';
+export * from './events.js';
 export * from './sponsors';
 export * from './team';
 export * from './auth';

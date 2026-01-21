@@ -16,6 +16,7 @@
 
 import Navbar from '@components/react/Navbar';
 import Footer from '@components/astro/Footer.astro';
+import LenisScroll from '@components/LenisScroll.astro';
 
 interface Props {
   title: string;
@@ -62,6 +63,9 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcu.edu";
     </style>
   </head>
   <body>
+    <!-- Smooth Scroll -->
+    <LenisScroll />
+    
     <!-- Navbar - React Island for mobile menu interactivity -->
     <Navbar client:load />
 

@@ -9,6 +9,7 @@
  */
 
 import Preloader from '@components/react/Preloader/Preloader';
+import LenisScroll from '@components/LenisScroll.astro';
 
 interface Props {
   title: string;
@@ -38,6 +39,9 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcuniversit
     <!-- SEO Meta Tags -->
     <title>{title} | Euphuism 2026</title>
     <meta name="description" content={description} />
+    
+    <!-- Animate.css for preloader exit animation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
@@ -70,6 +74,9 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcuniversit
     </style>
   </head>
   <body>
+    <!-- Smooth Scroll -->
+    <LenisScroll />
+
     <!-- Preloader - React Island for mystical loading experience -->
     {showPreloader && <Preloader client:load minDuration={8000} />}
     

@@ -1,0 +1,12 @@
+<script>
+  import Lenis from 'lenis/dist/lenis.mjs';
+  import 'lenis/dist/lenis.css';
+
+  // Initialize Lenis with optimal settings
+  const lenis = new Lenis({
+    autoRaf: true, // Automatically handle requestAnimationFrame
+  });
+
+  // Log to console so user knows it's active (optional, can be removed in prod)
+  console.log('Lenis smooth scroll initialized');
+</script>
