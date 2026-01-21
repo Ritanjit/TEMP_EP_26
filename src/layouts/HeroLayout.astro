@@ -1,0 +1,90 @@
+---
+/**
+ * HeroLayout.astro
+ * 
+ * Minimal layout for full-screen hero page display.
+ * No Navbar, No Footer - just the content.
+ * Used for landing page with full-screen hero image.
+ * Includes the mystical "Whispering Soil" preloader.
+ */
+
+import Preloader from '@components/react/Preloader/Preloader';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  showPreloader?: boolean;
+}
+
+const { 
+  title, 
+  description = "GCU Euphuism 2026 - The Grand Annual Cultural Fest",
+  image = "/images/og-image.jpg",
+  showPreloader = true
+} = Astro.props;
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcuniversity.ac.in/";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    
+    <!-- SEO Meta Tags -->
+    <title>{title} | Euphuism 2026</title>
+    <meta name="description" content={description} />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${siteUrl}${image}`} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    
+    <!-- Global Styles -->
+    <style is:global>
+      @import "../globals.css";
+      
+      /* Hero Layout Specific Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Preloader - React Island for mystical loading experience -->
+    {showPreloader && <Preloader client:load minDuration={8000} />}
+    
+    <!-- Main Content - No padding -->
+    <main class="hero-main">
+      <slot />
+    </main>
+
+    <!-- No Footer -->
+  </body>
+</html>
+
+<style>
+  .hero-main {
+    width: 100vw;
+    min-height: 100vh;
+  }
+</style>

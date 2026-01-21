@@ -1,0 +1,91 @@
+---
+// Prerender at build time (static event detail pages via getStaticPaths)
+export const prerender = true;
+
+/**
+ * Individual Event Page - events/[slug].astro
+ * 
+ * Dynamic route for individual event pages.
+ * Displays:
+ * - Full event details
+ * - Registration button
+ * 
+ * The [slug] in the filename creates dynamic routing.
+ * Example: /events/dance-competition
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getEvents, getEventBySlug } from '@apis/events';
+
+// Generate static paths for all events at build time
+export async function getStaticPaths() {
+  // TODO: Uncomment when database is ready
+  // const events = await getEvents();
+  // return events.map((event: any) => ({
+  //   params: { slug: event.slug },
+  //   props: { event },
+  // }));
+  
+  // Placeholder - returns empty array until database is configured
+  return [];
+}
+
+// Get event data from props
+const { event } = Astro.props;
+const { slug } = Astro.params;
+---
+
+<BaseLayout 
+  title={event?.title || 'Event'} 
+  description={event?.description || 'Event details'}
+>
+  <article class="event-detail py-20 px-4 max-w-4xl mx-auto">
+    
+    <!-- Event Header -->
+    <header class="mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        {event?.title || 'Event Title'}
+      </h1>
+      <div class="event-meta flex gap-4 text-white/60">
+        <span>📅 {event?.date || 'Date TBD'}</span>
+        <span>📍 {event?.venue || 'Venue TBD'}</span>
+      </div>
+    </header>
+
+    <!-- Event Image -->
+    <div class="event-image-container mb-8 rounded-xl overflow-hidden">
+      <div class="event-image h-64 md:h-96 bg-gradient-to-br from-purple-800 to-indigo-800 flex items-center justify-center">
+        <!-- TODO: Add actual event image -->
+        <p class="text-white/50">[Event Image]</p>
+      </div>
+    </div>
+
+    <!-- Event Description -->
+    <section class="event-description prose prose-invert max-w-none mb-8">
+      <p class="text-lg text-white/80">
+        {event?.fullDescription || 'Full event description will appear here.'}
+      </p>
+    </section>
+
+    <!-- Event Details -->
+    <section class="event-details bg-[var(--color-bg-card)] rounded-xl p-6 mb-8">
+      <h2 class="text-xl font-bold mb-4">Event Details</h2>
+      <ul class="space-y-2 text-white/70">
+        <li>🎭 Category: {event?.category || 'Category'}</li>
+        <li>👥 Team Size: {event?.teamSize || 'Individual/Team'}</li>
+        <li>🏆 Prize: {event?.prize || 'TBA'}</li>
+      </ul>
+    </section>
+
+    <!-- Registration CTA -->
+    <div class="registration-cta text-center">
+      <a 
+        href={event?.registrationLink || '#'} 
+        class="inline-block px-8 py-4 bg-[var(--color-primary)] rounded-full text-lg font-bold hover:bg-[var(--color-primary-dark)] transition"
+      >
+        Register for this Event
+      </a>
+    </div>
+
+  </article>
+</BaseLayout>

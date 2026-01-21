@@ -1,0 +1,42 @@
+---
+/**
+ * Navbar.astro - Static Astro Navbar Component
+ * 
+ * Static version of navbar for pages that don't need JS.
+ * Use the React version <Navbar client:load /> for mobile menu.
+ */
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Events', href: '/events' },
+  { label: 'Sponsors', href: '/sponsors' },
+  { label: 'WebDev Team', href: '/webdev' },
+];
+---
+
+<nav class="navbar fixed top-0 left-0 right-0 z-50 bg-[var(--color-bg-dark)]/80 backdrop-blur-md">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="logo text-xl font-bold gradient-text">
+      Euphuism 2026
+    </a>
+
+    <!-- Navigation Links -->
+    <div class="nav-links flex gap-6">
+      {navLinks.map((link) => (
+        <a 
+          href={link.href}
+          class={`text-white/70 hover:text-white transition ${currentPath === link.href ? 'text-white' : ''}`}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>

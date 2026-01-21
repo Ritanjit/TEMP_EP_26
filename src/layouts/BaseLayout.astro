@@ -1,0 +1,76 @@
+---
+/**
+ * BaseLayout.astro
+ * 
+ * Main layout wrapper for all pages.
+ * Includes: HTML structure, SEO meta tags, header, footer, global styles.
+ * 
+ * USAGE in pages:
+ * ---
+ * import BaseLayout from '@layouts/BaseLayout.astro';
+ * ---
+ * <BaseLayout title="Page Title" description="Page description">
+ *   <YourContent />
+ * </BaseLayout>
+ */
+
+import Navbar from '@components/react/Navbar';
+import Footer from '@components/astro/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+}
+
+const { 
+  title, 
+  description = "GCU Euphuism 2026 - The Grand Annual Cultural Fest",
+  image = "/images/og-image.jpg"
+} = Astro.props;
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcu.edu";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    
+    <!-- SEO Meta Tags -->
+    <title>{title} | Euphuism 2026</title>
+    <meta name="description" content={description} />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${siteUrl}${image}`} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    
+    <!-- Global Styles -->
+    <style is:global>
+      @import "../globals.css";
+    </style>
+  </head>
+  <body>
+    <!-- Navbar - React Island for mobile menu interactivity -->
+    <Navbar client:load />
+
+    <!-- Main Content -->
+    <main class="pt-16">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+  </body>
+</html>

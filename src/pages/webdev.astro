@@ -1,0 +1,53 @@
+---
+// Prerender at build time (static team page)
+export const prerender = true;
+
+/**
+ * WebDev Committee Page - webdev.astro
+ * 
+ * Displays the Web Development Committee members.
+ * Shows names and profile pictures.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getWebDevTeam } from '@apis/team';
+
+// Fetch team members at build time
+// TODO: Uncomment when database is ready
+// const teamMembers = await getWebDevTeam();
+const teamMembers: any[] = []; // Placeholder
+---
+
+<BaseLayout title="WebDev Committee" description="Meet the Web Development team behind Euphuism 2026">
+  
+  <section class="webdev-page py-20 px-4 max-w-6xl mx-auto">
+    <header class="mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">WebDev Committee</h1>
+      <p class="text-white/70">The team behind this website</p>
+    </header>
+
+    <!-- Team Grid -->
+    <div class="team-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {teamMembers.length > 0 ? (
+        teamMembers.map((member: any) => (
+          <div class="member-card text-center">
+            <!-- Profile Picture -->
+            <div class="member-avatar w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gradient-to-br from-purple-600 to-indigo-600">
+              <!-- TODO: Add actual profile image -->
+              <div class="w-full h-full flex items-center justify-center text-4xl">
+                👤
+              </div>
+            </div>
+            <h3 class="font-bold text-lg">{member.name || 'Member Name'}</h3>
+            <p class="text-white/60 text-sm">{member.role || 'Role'}</p>
+          </div>
+        ))
+      ) : (
+        <div class="col-span-full text-center text-white/50 py-12">
+          <p>Team members will be displayed here once added.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+</BaseLayout>

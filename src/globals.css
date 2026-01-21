@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* Google Fonts - Quicksand Medium */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+/* 
+ * Global Styles for Euphuism 2026
+ * 
+ * This file contains:
+ * 1. Tailwind CSS import (v4 uses @import instead of @tailwind)
+ * 2. Custom CSS variables for theming
+ * 3. Global styles and animations
+ * 
+ * Fonts:
+ * - Headings: Cubao Free 2 Exp (from CDN)
+ * - Body/Sub-headings: Quicksand Medium (from Google Fonts)
+ */
+
+/* Cubao Font - CDN */
+@font-face {
+  font-family: "Cubao Free 2 Exp";
+  src: url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.eot");
+  src: url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.eot?#iefix") format("embedded-opentype"),
+       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.woff") format("woff"),
+       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.ttf") format("truetype"),
+       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.svg#Cubao Free 2 Exp") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Theme Variables */
+:root {
+  /* Euphuism 2026 Color Palette */
+  --euphuism-green: #2D3E10;
+  --euphuism-beige: #EFE6C1;
+  --euphuism-brown: #843535;
+  --euphuism-orange: #D03503;
+  --euphuism-blue: #2663EC;
+  --euphuism-light-pink: #F4A8B5;
+  --euphuism-dark-pink: #FF5E90;
+  
+  /* Legacy Colors (keeping for compatibility) */
+  --color-primary: #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-secondary: #ec4899;
+  --color-accent: #8b5cf6;
+  
+  /* Background Colors */
+  --color-bg-dark: #0f0f1a;
+  --color-bg-card: #1a1a2e;
+  
+  /* Text Colors */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  
+  /* Typography - Use these CSS variables throughout the site */
+  --font-heading: "Cubao Free 2 Exp", Georgia, serif;  /* For main headings */
+  --font-body: 'Quicksand', sans-serif;                 /* For body/sub-headings */
+}
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body); /* Quicksand Medium as default body font */
+  font-weight: 500; /* Medium weight */
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+}
+
+/* Heading styles - Apply Cubao font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Utility Classes */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}

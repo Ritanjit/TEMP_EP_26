@@ -1,0 +1,36 @@
+{
+  "Required Web Pages": {
+    "1. Home Page": [
+      "3D Model (Mobile View - no 3d model)",
+      "Navbar"
+    ],
+    "2. All Events Page": [
+      "Access all events",
+      "Important details for each event"
+    ],
+    "3. Per Event Dedicated Page": [
+      "All event details",
+      "Registration button"
+    ],
+    "4. Sponsors Page": [
+      "Showcase sponsors"
+    ],
+    "5. Admin Auth Page": [
+      "Admin login"
+    ],
+    "6. Admin Panel": [
+      "Dashboard - quick access admin tools",
+      "Events Page Tools",
+      "Sponsor Page Tools",
+      "Home Page - artist image, euphuism logo, other media",
+      "Upload Tool - upload files to cloud storage",
+      "All media showcase page (optional - to manage all media uploaded)"
+    ],
+    "7. WebDev Committee Page": [
+      "Names + profile pictures of committee members"
+    ],
+    "8. 404 Page": [
+      "For non-existing routes"
+    ]
+  }
+}

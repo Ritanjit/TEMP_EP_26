@@ -1,0 +1,59 @@
+---
+// Prerender at build time (static sponsors showcase)
+export const prerender = true;
+
+/**
+ * Sponsors Page - sponsors.astro
+ * 
+ * Showcases all sponsors/partners.
+ * Data fetched from FrontQL at build time.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getSponsors } from '@apis/sponsors';
+
+// Fetch sponsors at build time
+// TODO: Uncomment when database is ready
+// const sponsors = await getSponsors();
+const sponsors: any[] = []; // Placeholder
+---
+
+<BaseLayout title="Sponsors" description="Our valued sponsors and partners">
+  
+  <section class="sponsors-page py-20 px-4 max-w-6xl mx-auto">
+    <header class="mb-12 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Our Sponsors</h1>
+      <p class="text-white/70">Thank you to our amazing partners</p>
+    </header>
+
+    <!-- Sponsors Grid -->
+    <div class="sponsors-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {sponsors.length > 0 ? (
+        sponsors.map((sponsor: any) => (
+          <div class="sponsor-card bg-[var(--color-bg-card)] rounded-xl p-6 flex items-center justify-center aspect-square hover:scale-105 transition">
+            <!-- TODO: Add sponsor logo -->
+            <div class="sponsor-logo text-center">
+              <div class="w-20 h-20 bg-white/10 rounded-full mx-auto mb-4"></div>
+              <p class="font-bold">{sponsor.name || 'Sponsor'}</p>
+              <p class="text-sm text-white/50">{sponsor.tier || 'Partner'}</p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <div class="col-span-full text-center text-white/50 py-12">
+          <p>Sponsors will be displayed here once added.</p>
+        </div>
+      )}
+    </div>
+
+    <!-- Become a Sponsor CTA -->
+    <div class="become-sponsor text-center mt-16 p-8 bg-[var(--color-bg-card)] rounded-xl">
+      <h2 class="text-2xl font-bold mb-4">Become a Sponsor</h2>
+      <p class="text-white/70 mb-6">Partner with us for Euphuism 2026</p>
+      <a href="/contact" class="inline-block px-8 py-3 bg-[var(--color-primary)] rounded-full hover:bg-[var(--color-primary-dark)] transition">
+        Contact Us
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>
