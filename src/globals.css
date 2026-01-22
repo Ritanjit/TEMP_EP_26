@@ -21,10 +21,10 @@
   font-family: "Cubao Free 2 Exp";
   src: url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.eot");
   src: url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.eot?#iefix") format("embedded-opentype"),
-       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.woff2") format("woff2"),
-       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.woff") format("woff"),
-       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.ttf") format("truetype"),
-       url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.svg#Cubao Free 2 Exp") format("svg");
+    url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/0aaa83f760b96926c5f6785125095e23.svg#Cubao Free 2 Exp") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -40,27 +40,29 @@
   --euphuism-blue: #2663EC;
   --euphuism-light-pink: #F4A8B5;
   --euphuism-dark-pink: #FF5E90;
-  
+
   /* Legacy Colors (keeping for compatibility) */
   --color-primary: #6366f1;
   --color-primary-dark: #4f46e5;
   --color-secondary: #ec4899;
   --color-accent: #8b5cf6;
-  
+
   /* Background Colors */
   --color-bg-dark: #0f0f1a;
   --color-bg-card: #1a1a2e;
-  
+
   /* Text Colors */
   --color-text-primary: #ffffff;
   --color-text-secondary: #a1a1aa;
-  
+
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  
+
   /* Typography - Use these CSS variables throughout the site */
-  --font-heading: "Cubao Free 2 Exp", Georgia, serif;  /* For main headings */
-  --font-body: 'Quicksand', sans-serif;                 /* For body/sub-headings */
+  --font-heading: "Cubao Free 2 Exp", Georgia, serif;
+  /* For main headings */
+  --font-body: 'Quicksand', sans-serif;
+  /* For body/sub-headings */
 }
 
 /* Reset and Base Styles */
@@ -71,20 +73,63 @@
 }
 
 html {
+  /* Firefox Support - Note: Firefox doesn't support true transparency well */
+  scrollbar-width: thin;
+  scrollbar-color: var(--euphuism-green) transparent;
   scroll-behavior: smooth;
+}
+
+/* Chrome, Edge, and Safari Support - Full transparency works here */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+/* Track - the area the thumb slides in */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0); /* Fully transparent */
+}
+
+/* Track piece - scrollbar track NOT covered by the handle */
+::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+
+/* Corner - where horizontal and vertical scrollbars meet */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* The draggable scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: var(--euphuism-green);
+  border-radius: 10px;
+}
+
+/* Hover state for thumb */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--euphuism-brown);
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--font-body); /* Quicksand Medium as default body font */
-  font-weight: 500; /* Medium weight */
+  font-family: var(--font-body);
+  /* Quicksand Medium as default body font */
+  font-weight: 500;
+  /* Medium weight */
   background-color: var(--euphuism-beige);
   color: var(--color-text-primary);
 }
 
 /* Heading styles - Apply Cubao font */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
 }
 
@@ -98,17 +143,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Animation Keyframes */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px); 
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

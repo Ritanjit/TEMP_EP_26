@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedBackground } from './AnimatedBackground';
 import { PreloaderText } from './PreloaderText';
 import { useImagePreloader } from '../../../hooks/useImagePreloader';
+import { SPONSOR_IMAGE_URLS } from '../../../lib/data/sponsors';
+import { EVENT_IMAGE_URLS } from '../../../lib/data/events';
 
 /**
  * Preloader.tsx
@@ -34,6 +36,19 @@ const HERO_IMAGES_TO_PRELOAD = [
     '/Euphuism26 logo m2.png'
 ];
 
+// Sponsor section images to preload during preloader story
+const SPONSOR_IMAGES_TO_PRELOAD = SPONSOR_IMAGE_URLS;
+
+// Key Events section images to preload during preloader story
+const EVENT_IMAGES_TO_PRELOAD = EVENT_IMAGE_URLS;
+
+// All images to preload
+const ALL_IMAGES_TO_PRELOAD = [
+    ...HERO_IMAGES_TO_PRELOAD,
+    ...SPONSOR_IMAGES_TO_PRELOAD,
+    ...EVENT_IMAGES_TO_PRELOAD
+];
+
 // ============================================
 // STORY START DELAY CONFIGURATION
 // ============================================
@@ -60,8 +75,8 @@ export const Preloader: React.FC<PreloaderProps> = ({
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const preloaderRef = useRef<HTMLDivElement | null>(null);
 
-    // Preload hero images in background while story plays
-    const { isLoaded: imagesLoaded, progress: imageProgress } = useImagePreloader(HERO_IMAGES_TO_PRELOAD);
+    // Preload all critical images in background while story plays
+    const { isLoaded: imagesLoaded, progress: imageProgress } = useImagePreloader(ALL_IMAGES_TO_PRELOAD);
 
     // Initial check for skipped preloader
     useEffect(() => {

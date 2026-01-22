@@ -20,170 +20,39 @@ export const prerender = true;
 
 import HeroLayout from '@layouts/HeroLayout.astro';
 import HeroParallax from '@components/react/hero/HeroParallax';
+import AboutEventsParallax from '@components/react/sections/AboutEventsParallax';
+import SponsorsSection from '@components/react/sponsors/SponsorsSection';
 ---
 
 <HeroLayout title="Home" description="Welcome to GCU Euphuism 2026 - The Grand Annual Cultural Fest">
   
-  <!-- Parallax Hero Section -->
+  <!-- 
+    Parallax Hero Section
+    =====================
+    HeroParallax has height: 150vh for scroll-based animation.
+    Features:
+    - Parallax effects (trees moving, logo rising)
+    - Sticky logo after scroll completes
+  -->
   <HeroParallax client:load />
+
+  <!-- 
+    About + Key Events Parallax Section
+    ===================================
+    Features Aceternity-style scrolling parallax with:
+    - About Euphuism 2026 header
+    - 3 rows of Key Events cards with horizontal scroll animation
+    - 3D perspective transforms (rotateX, rotateZ)
+    - Hover effects showing event names
+  -->
+  <AboutEventsParallax client:load />
+
+  <!-- 
+    Sponsors Section
+    ================
+    Displays sponsor logos with gamusa background.
+  -->
+  <SponsorsSection client:load />
 
 </HeroLayout>
 
-
-<!--
-  =====================================================
-  COMMENTED OUT: Original Landing Page Components
-  Uncomment and switch back to BaseLayout when ready
-  =====================================================
--->
-
-<!--
-<BaseLayout title="Home" description="Welcome to GCU Euphuism 2026 - The Grand Annual Cultural Fest">
-  
-  <section id="hero" class="hero-section min-h-screen flex items-center justify-center relative">
-    <div id="hero-3d" class="hero-3d-container w-full h-full absolute inset-0">
-      <div class="placeholder-3d bg-gradient-to-br from-purple-900 to-indigo-900 w-full h-full flex items-center justify-center">
-        <p class="text-white/50">[3D Model will render here]</p>
-      </div>
-    </div>
-
-    <div class="hero-content relative z-10 text-center px-4">
-      <h1 class="text-5xl md:text-7xl font-bold gradient-text mb-4">
-        Euphuism 2026
-      </h1>
-      <p class="text-xl md:text-2xl text-white/80 mb-8">
-        The Grand Annual Cultural Fest of GCU
-      </p>
-      <div class="hero-cta flex gap-4 justify-center">
-        <a href="/events" class="btn-primary px-8 py-3 bg-[var(--color-primary)] rounded-full hover:bg-[var(--color-primary-dark)] transition">
-          Explore Events
-        </a>
-        <a href="/register" class="btn-secondary px-8 py-3 border border-white/30 rounded-full hover:bg-white/10 transition">
-          Register Now
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section id="about" class="about-section py-20 px-4 max-w-6xl mx-auto">
-    <h2 class="text-3xl font-bold mb-8 text-center">About Euphuism</h2>
-  </section>
-
-  <section id="highlights" class="highlights-section py-20 bg-[var(--color-bg-card)]">
-    <div class="max-w-6xl mx-auto px-4">
-      <h2 class="text-3xl font-bold mb-8 text-center">Event Highlights</h2>
-    </div>
-  </section>
-
-</BaseLayout>
--->
-
-<style>
-  /* Full Screen Hero Image Styles */
-  .hero-container {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow: hidden;
-    /* Beige background as fallback (matches the image) */
-    background-color: #EFE6C1;
-  }
-
-  .hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    /* Beige background for letterboxing on extreme aspect ratios */
-    background-color: #EFE6C1;
-  }
-
-  /* Responsive adjustments */
-  
-  /* Desktop - Large screens */
-  @media (min-width: 1024px) {
-    .hero-image {
-      object-fit: contain;
-    }
-  }
-
-  /* Tablet - Medium screens */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .hero-image {
-      object-fit: contain;
-    }
-  }
-
-  /* Mobile - Small screens */
-  @media (max-width: 767px) {
-    .hero-image {
-      object-fit: contain;
-      /* Ensure image is fully visible on mobile */
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
-
-  /* Landscape mode on mobile */
-  @media (max-width: 767px) and (orientation: landscape) {
-    .hero-image {
-      object-fit: contain;
-    }
-  }
-
-  /* Portrait mode on mobile */
-  @media (max-width: 767px) and (orientation: portrait) {
-    .hero-image {
-      object-fit: contain;
-    }
-  }
-
-  /* Events Coming Soon Text Styles */
-  .coming-soon-text {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--euphuism-green);
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    text-align: center;
-    padding: 0.75rem 1rem;
-    /* Subtle background for better readability */
-    background-color: rgba(239, 230, 193, 0.85);
-    border-radius: 8px;
-    /* Animation */
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.7;
-    }
-  }
-
-  /* Responsive text size */
-  @media (max-width: 767px) {
-    .coming-soon-text {
-      font-size: 1rem;
-      padding: 0.5rem 1.25rem;
-      bottom: 1.5rem;
-      letter-spacing: 0.1em;
-    }
-  }
-
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .coming-soon-text {
-      font-size: 1.25rem;
-      bottom: 1.75rem;
-    }
-  }
-</style>

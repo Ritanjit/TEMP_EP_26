@@ -16,7 +16,7 @@
  * - Logo: Drops from top + slight zoom on scroll
  */
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 export default function HeroParallax() {
@@ -96,10 +96,10 @@ export default function HeroParallax() {
   const logoY = useTransform(scrollProgress, [0, logoAnimationEnd], ['50vh', '-120%']);
   const logoScale = useTransform(scrollProgress, [0, logoAnimationEnd], [0, isMobile ? 1.5 : 1.2]);
   const logoZIndex = useTransform(scrollProgress, [0, 0.2], [5, 15]);
-  
+
   // Track when logo should become sticky (after parallax completes)
   const [isLogoSticky, setIsLogoSticky] = useState(false);
-  
+
   // Update sticky state based on scroll progress (matches animation end)
   useEffect(() => {
     const unsubscribe = scrollProgress.on('change', (value) => {
@@ -111,11 +111,18 @@ export default function HeroParallax() {
   // Scroll indicator fade out
   const scrollIndicatorOpacity = useTransform(scrollProgress, [0, 0.15], [1, 0]);
 
-  // Bihu image: Scale down + fade out + move down as user scrolls
+  // Hero decorative image: Randomly select between bihu.png and rhino.png on page load
+  // Using useMemo to ensure random selection only happens once per page load
+  const heroDecoImage = useMemo(() => {
+    const images = ['/hero/bihu.png', '/hero/rhino.png'];
+    return images[Math.floor(Math.random() * images.length)];
+  }, []);
+
+  // Hero decorative image: Scale down + fade out + move down as user scrolls
   // z-index 25 = above trees (20) but below logo's final z-index (100)
-  const bihuScale = useTransform(scrollProgress, [0, 0.5], [1, 0.3]);
-  const bihuOpacity = useTransform(scrollProgress, [0, 0.4], [1, 0]);
-  const bihuY = useTransform(scrollProgress, [0, 0.5], [0, 200]);
+  const heroDecoScale = useTransform(scrollProgress, [0, 0.5], [1, 0.3]);
+  const heroDecoOpacity = useTransform(scrollProgress, [0, 0.4], [1, 0]);
+  const heroDecoY = useTransform(scrollProgress, [0, 0.5], [0, 200]);
 
   // Don't render until client-side to avoid hydration issues
   if (!isClient) {
@@ -135,7 +142,7 @@ export default function HeroParallax() {
       ref={containerRef}
       className="hero-parallax-container"
       style={{
-        height: '200vh', // Extra height for scroll-linked animation
+        height: '100vh', // Extra height for scroll-linked animation
         position: 'relative',
         width: '100%',
         overflow: 'hidden',
@@ -151,6 +158,9 @@ export default function HeroParallax() {
           width: '100%',
           overflow: 'hidden',
           backgroundColor: '#EFE6C1', // Beige fallback
+          // When logo is sticky/fixed, elevate this wrapper above sponsors section (z-index: 30)
+          // This solves the stacking context issue where logo was trapped in this wrapper's context
+          zIndex: isLogoSticky ? 50 : 'auto',
         }}
       >
         {/* Backdrop Layer 1 - Tea field scenery */}
@@ -203,7 +213,7 @@ export default function HeroParallax() {
           style={{
             position: isLogoSticky ? 'fixed' : 'absolute',
             // When sticky: positioned at top; When parallax: positioned at bottom
-            ...(isLogoSticky 
+            ...(isLogoSticky
               ? { top: isMobile ? '10px' : '20px', bottom: 'auto' }
               : { bottom: '10%', top: 'auto' }
             ),
@@ -213,7 +223,7 @@ export default function HeroParallax() {
             y: isLogoSticky ? 0 : logoY,
             // Keep scale at 1 (end value of parallax) when sticky for seamless transition
             scale: isLogoSticky ? 1 : logoScale,
-            zIndex: isLogoSticky ? 100 : logoZIndex,
+            zIndex: isLogoSticky ? 1000 : logoZIndex, // 1000 = above sponsors (30)
             // Custom animation duration for slideInDown
             '--animate-duration': '0.5s',
           } as React.CSSProperties}
@@ -224,8 +234,8 @@ export default function HeroParallax() {
             style={{
               // Desktop: Sticky = smaller (300px), Parallax = larger (min(85vw, 650px))
               // Mobile: Always min(60vw, 400px)
-              width: isMobile 
-                ? 'min(60vw, 400px)' 
+              width: isMobile
+                ? 'min(60vw, 400px)'
                 : (isLogoSticky ? '300px' : 'min(85vw, 650px)'),
               height: 'auto',
               filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.3))',
@@ -284,23 +294,23 @@ export default function HeroParallax() {
           />
         </motion.div>
 
-        {/* Bihu Image - Above trees, below final logo position */}
+        {/* Hero Decorative Image - Randomly selected between bihu.png and rhino.png */}
         <motion.div
           style={{
             position: 'absolute',
             bottom: 0,
             left: '50%',
             x: '-50%',
-            y: bihuY,
-            scale: bihuScale,
-            opacity: bihuOpacity,
+            y: heroDecoY,
+            scale: heroDecoScale,
+            opacity: heroDecoOpacity,
             zIndex: 25, // Above trees (20), below logo's final z-index (100)
             transformOrigin: 'bottom center',
           }}
         >
           <img
-            src="/hero/bihu.png"
-            alt="Bihu celebration"
+            src={heroDecoImage}
+            alt="Assamese cultural element"
             style={{
               width: isMobile ? 'min(80vw, 350px)' : 'min(50vw, 500px)',
               height: 'auto',
