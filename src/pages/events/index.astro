@@ -6,53 +6,19 @@ export const prerender = true;
  * All Events Page - events/index.astro
  * 
  * Displays all events with:
- * - Event cards showing important details
- * - Link to individual event pages
- * 
- * Data is fetched from FrontQL at build time.
+ * - Day-wise organization (Day 1, Day 2, Day 3)
+ * - Category color coding (Music, Tech, Art, Academic, Fun)
+ * - Parallax watermark and grain texture overlay
+ * - GSAP scroll-triggered animations
  */
 
-import BaseLayout from '@layouts/BaseLayout.astro';
-import { getEvents } from '@apis/events';
-
-// Fetch events at build time
-// TODO: Uncomment when database is ready
-// const events = await getEvents();
-const events: any[] = []; // Placeholder until database is set up
+import LandingLayout from '@layouts/LandingLayout.astro';
+import AllEventsPage from '@components/react/sections/AllEventsPage';
 ---
 
-<BaseLayout title="Events" description="Explore all events at Euphuism 2026">
+<LandingLayout title="All Events" description="Explore all events across three exciting days of Euphuism 2026" showPreloader={false}>
   
-  <section class="events-page py-20 px-4 max-w-6xl mx-auto">
-    <header class="mb-12 text-center">
-      <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">All Events</h1>
-      <p class="text-white/70">Discover the exciting lineup of events</p>
-    </header>
+  <!-- AllEventsPage React Component with full interactivity -->
+  <AllEventsPage client:load />
 
-    <!-- Events Grid -->
-    <div class="events-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {events.length > 0 ? (
-        events.map((event: any) => (
-          <article class="event-card bg-[var(--color-bg-card)] rounded-xl overflow-hidden hover:scale-105 transition">
-            <!-- TODO: Add EventCard component -->
-            <div class="event-image h-48 bg-gradient-to-br from-purple-800 to-indigo-800"></div>
-            <div class="event-info p-6">
-              <h3 class="text-xl font-bold mb-2">{event.title || 'Event Title'}</h3>
-              <p class="text-white/60 text-sm mb-4">{event.description || 'Event description'}</p>
-              <a href={`/events/${event.slug}`} class="text-[var(--color-primary)] hover:underline">
-                View Details →
-              </a>
-            </div>
-          </article>
-        ))
-      ) : (
-        <!-- Placeholder cards when no data -->
-        <div class="col-span-full text-center text-white/50 py-12">
-          <p>Events will be displayed here once added to the database.</p>
-          <p class="text-sm mt-2">See README.md for database setup instructions.</p>
-        </div>
-      )}
-    </div>
-  </section>
-
-</BaseLayout>
+</LandingLayout>

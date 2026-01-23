@@ -273,6 +273,38 @@ function KeyEventsHeading() {
       >
         Hover over the cards to discover our signature events
       </p>
+      
+      {/* View All Events Button */}
+      <motion.a
+        href="/events"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        whileHover={{ 
+          scale: 1.05,
+          boxShadow: "0 12px 35px rgba(208, 53, 3, 0.4)",
+        }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.3 }}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          marginTop: "1.5rem",
+          padding: "0.875rem 2rem",
+          borderRadius: "9999px",
+          backgroundColor: "var(--euphuism-orange)",
+          color: "var(--euphuism-beige)",
+          fontFamily: "var(--font-heading)",
+          fontSize: "clamp(0.875rem, 1.5vw, 1rem)",
+          textDecoration: "none",
+          boxShadow: "0 6px 25px rgba(208, 53, 3, 0.3)",
+          cursor: "pointer",
+        }}
+      >
+        View All Events
+        <span style={{ fontSize: "1.2em" }}>→</span>
+      </motion.a>
     </div>
   );
 }
