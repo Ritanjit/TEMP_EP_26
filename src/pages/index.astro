@@ -18,13 +18,13 @@ export const prerender = true;
  * - Dark Pink: #FF5E90
  */
 
-import HeroLayout from '@layouts/HeroLayout.astro';
+import LandingLayout from '@layouts/LandingLayout.astro';
 import HeroParallax from '@components/react/hero/HeroParallax';
 import AboutEventsParallax from '@components/react/sections/AboutEventsParallax';
 import SponsorsSection from '@components/react/sponsors/SponsorsSection';
 ---
 
-<HeroLayout title="Home" description="Welcome to GCU Euphuism 2026 - The Grand Annual Cultural Fest">
+<LandingLayout title="Home" description="Welcome to GCU Euphuism 2026 - The Grand Annual Cultural Fest">
   
   <!-- 
     Parallax Hero Section
@@ -54,5 +54,5 @@ import SponsorsSection from '@components/react/sponsors/SponsorsSection';
   -->
   <SponsorsSection client:load />
 
-</HeroLayout>
+</LandingLayout>
 

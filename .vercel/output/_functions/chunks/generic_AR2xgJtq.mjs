@@ -494,7 +494,7 @@ async function getConfiguredImageService() {
   if (!globalThis?.astroAsset?.imageService) {
     const { default: service } = await import(
       // @ts-expect-error
-      './sharp_DHwxjmEz.mjs'
+      './sharp_BkWZsf-3.mjs'
     ).catch((e) => {
       const error = new AstroError(InvalidImageService);
       error.cause = e;
@@ -676,7 +676,7 @@ const $$Image = createComponent(async ($$result, $$props, $$slots) => {
   }
   const { class: className, ...attributes } = { ...additionalAttributes, ...image.attributes };
   return renderTemplate`${maybeRenderHead()}<img${addAttribute(image.src, "src")}${spreadAttributes(attributes)}${addAttribute(className, "class")}>`;
-}, "B:/Projects/EP 26/node_modules/.pnpm/astro@5.16.11_@vercel+funct_85d1ac84ffb1a82f851f2e8f4c5f29a5/node_modules/astro/components/Image.astro", void 0);
+}, "B:/College Stuff/Euphuism 2026/Euphuism 2026 Website/node_modules/.pnpm/astro@5.16.11_@vercel+funct_85d1ac84ffb1a82f851f2e8f4c5f29a5/node_modules/astro/components/Image.astro", void 0);
 
 const mimes = {
   "3g2": "video/3gpp2",
@@ -1194,7 +1194,7 @@ const $$Picture = createComponent(async ($$result, $$props, $$slots) => {
     const srcsetAttribute = props.densities || !props.densities && !props.widths && !useResponsive ? `${image.src}${image.srcSet.values.length > 0 ? ", " + image.srcSet.attribute : ""}` : image.srcSet.attribute;
     return renderTemplate`<source${addAttribute(srcsetAttribute, "srcset")}${addAttribute(lookup(image.options.format ?? image.src) ?? `image/${image.options.format}`, "type")}${spreadAttributes(sourceAdditionalAttributes)}>`;
   })}  <img${addAttribute(fallbackImage.src, "src")}${spreadAttributes(attributes)}${addAttribute(className, "class")}> </picture>`;
-}, "B:/Projects/EP 26/node_modules/.pnpm/astro@5.16.11_@vercel+funct_85d1ac84ffb1a82f851f2e8f4c5f29a5/node_modules/astro/components/Picture.astro", void 0);
+}, "B:/College Stuff/Euphuism 2026/Euphuism 2026 Website/node_modules/.pnpm/astro@5.16.11_@vercel+funct_85d1ac84ffb1a82f851f2e8f4c5f29a5/node_modules/astro/components/Picture.astro", void 0);
 
 const fontsMod = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null
@@ -1253,7 +1253,7 @@ const $$Font = createComponent(($$result, $$props, $$slots) => {
   }
   const filteredPreloadData = filterPreloads(data.preloadData, preload);
   return renderTemplate`<style>${unescapeHTML(data.css)}</style>${filteredPreloadData?.map(({ url, type }) => renderTemplate`<link rel="preload"${addAttribute(url, "href")} as="font"${addAttribute(`font/${type}`, "type")} crossorigin>`)}`;
-}, "B:/Projects/EP 26/node_modules/.pnpm/astro@5.16.11_@vercel+funct_85d1ac84ffb1a82f851f2e8f4c5f29a5/node_modules/astro/components/Font.astro", void 0);
+}, "B:/College Stuff/Euphuism 2026/Euphuism 2026 Website/node_modules/.pnpm/astro@5.16.11_@vercel+funct_85d1ac84ffb1a82f851f2e8f4c5f29a5/node_modules/astro/components/Font.astro", void 0);
 
 const assetQueryParams = undefined;
 							const imageConfig = {"endpoint":{"route":"/_image"},"service":{"entrypoint":"astro/assets/services/sharp","config":{}},"domains":[],"remotePatterns":[],"responsiveStyles":false};

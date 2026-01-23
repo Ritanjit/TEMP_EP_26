@@ -56,7 +56,7 @@ export default function HeroParallax() {
 
     // Check if mobile on mount and resize
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth <= 980);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);

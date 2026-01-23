@@ -36,7 +36,7 @@ export default function AboutEventsParallax() {
   
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth <= 980);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -83,7 +83,7 @@ export default function AboutEventsParallax() {
   // Mobile: NO translateY animation to eliminate empty space
   // Desktop: Full parallax effect
   const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0.2, 1]),
+    useTransform(scrollYProgress, [0, 0.2], [0.01, 1]),
     springConfig
   );
   const translateY = useSpring(
@@ -195,31 +195,32 @@ function AboutHeader() {
         maxWidth: "80rem",
         position: "relative",
         margin: "0 auto",
-        paddingTop: "2rem", // Reduced from 5rem
-        paddingBottom: "4rem", // Reduced from 10rem
+        paddingTop: "2rem",
+        paddingBottom: "4rem",
         paddingLeft: "1rem",
         paddingRight: "1rem",
         width: "100%",
+        textAlign: "center", // Center align everything in the container
         left: 0,
         top: 0,
       }}
     >
       <h1
         style={{
-          fontSize: "clamp(1.5rem, 5vw, 4.5rem)",
+          fontSize: "clamp(2rem, 5vw, 4.5rem)",
           fontWeight: "bold",
           fontFamily: "var(--font-heading)",
           color: "var(--euphuism-orange)",
           lineHeight: 1.2,
         }}
       >
-        About <br /> Euphuism 2026
+        About Euphuism 2026
       </h1>
       <p
         style={{
-          maxWidth: "42rem",
+          maxWidth: "60rem", // Increased width for desktop
+          margin: "2rem auto 0", // Center the paragraph block
           fontSize: "clamp(1rem, 2vw, 1.25rem)",
-          marginTop: "2rem",
           fontFamily: "var(--font-body)",
           color: "var(--euphuism-green)",
           lineHeight: 1.7,
