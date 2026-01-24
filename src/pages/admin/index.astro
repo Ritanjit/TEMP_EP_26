@@ -1,0 +1,9 @@
+---
+export const prerender = false;
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import Adminhome from "@/components/react/Admin/pages/Home";
+---
+
+<AdminLayout title="Dashboard">
+  <Adminhome client:load />
+</AdminLayout>

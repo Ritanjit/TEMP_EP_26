@@ -36,6 +36,18 @@ import SponsorsSection from '@components/react/sponsors/SponsorsSection';
   -->
   <HeroParallax client:load />
 
+  {/* Grain texture overlay */}
+  <div
+      style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 0.1,
+          backgroundImage: "url('https://www.transparenttextures.com/patterns/asfalt-dark.png')",
+          opacity: 0.58,
+      }}
+  />
+
   <!-- 
     About + Key Events Parallax Section
     ===================================
@@ -55,4 +67,3 @@ import SponsorsSection from '@components/react/sponsors/SponsorsSection';
   <SponsorsSection client:load />
 
 </LandingLayout>
-

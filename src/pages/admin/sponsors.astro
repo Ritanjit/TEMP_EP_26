@@ -1,0 +1,9 @@
+---
+export const prerender = false;
+import AdminLayout from "@/layouts/AdminLayout.astro";
+import AdminSponsors from "@/components/react/Admin/pages/Sponsors";
+---
+
+<AdminLayout title="Sponsors">
+  <AdminSponsors client:load />
+</AdminLayout>

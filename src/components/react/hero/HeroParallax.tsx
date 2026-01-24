@@ -114,7 +114,7 @@ export default function HeroParallax() {
   // Hero decorative image: Randomly select between bihu.png and rhino.png on page load
   // Using useMemo to ensure random selection only happens once per page load
   const heroDecoImage = useMemo(() => {
-    const images = ['/hero/bihu.png', '/hero/rhino.png'];
+    const images = ['/hero/bihu.png', '/hero/rhino.png', '/hero/leopard.png', '/hero/mithun.png','/hero/langur.png','/hero/serow.png', '/hero/panda.png', '/hero/sangai.png'];
     return images[Math.floor(Math.random() * images.length)];
   }, []);
 

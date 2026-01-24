@@ -4,6 +4,7 @@
  * 
  * Main layout wrapper for all pages.
  * Includes: HTML structure, SEO meta tags, header, footer, global styles.
+ * Includes View Transitions for smooth page navigation with loading animation.
  * 
  * USAGE in pages:
  * ---
@@ -14,9 +15,11 @@
  * </BaseLayout>
  */
 
+import { ViewTransitions } from 'astro:transitions';
 import Navbar from '@components/react/Navbar';
 import Footer from '@components/astro/Footer.astro';
 import LenisScroll from '@components/LenisScroll.astro';
+import PageLoader from '@components/react/PageLoader';
 
 interface Props {
   title: string;
@@ -61,8 +64,16 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcu.edu";
     <style is:global>
       @import "../globals.css";
     </style>
+
+    <!-- View Transitions for smooth page navigation -->
+    <ViewTransitions />
   </head>
   <body>
+    <!-- Page Loader for navigation transitions (persisted across View Transitions) -->
+    <div transition:persist="page-loader">
+      <PageLoader client:load text="Loading..." />
+    </div>
+
     <!-- Smooth Scroll -->
     <LenisScroll />
     

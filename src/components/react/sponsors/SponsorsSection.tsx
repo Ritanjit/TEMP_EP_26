@@ -9,6 +9,19 @@
 import { useState, useEffect } from "react";
 import SponsorGallery from "./SponsorGallery";
 
+// ============================================
+// CONFIGURABLE CONSTANTS
+// ============================================
+
+// Aspect ratios matching background images
+const DESKTOP_ASPECT_RATIO = 5 / 1;
+const MOBILE_ASPECT_RATIO = 16 / 9;
+
+// Gap between heading and gallery section
+const SECTION_SPACING = "2rem";
+
+// ============================================
+
 export default function SponsorsSection() {
     const [isMobile, setIsMobile] = useState(false);
 
@@ -21,60 +34,57 @@ export default function SponsorsSection() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    const aspectRatio = isMobile ? MOBILE_ASPECT_RATIO : DESKTOP_ASPECT_RATIO;
+
     return (
-        <section
-            id="sponsors"
-            style={{
-                width: '100%',
-                minHeight: '60vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'flex-start', // Changed from center to move content up
-                paddingTop: isMobile ? '2.5rem' : '4rem', // Top padding to position content
-                paddingBottom: '4rem',
-                position: 'relative',
-                backgroundImage: isMobile ? 'url("/bg/gamusa2.png")' : 'url("/bg/gamusa.png")',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                backgroundPosition: 'top',
-            }}
-        >
+        <div style={{ width: '100%' }}>
             {/* Section Heading */}
-            {/* 
-       * SPACING: Adjust marginBottom to control gap between heading and gallery
-       * - 0.5rem = minimal gap
-       * - 1rem = small gap
-       * - 2rem = medium gap
-       * - 3rem = large gap
-       */}
             <h2
                 style={{
                     fontFamily: 'var(--font-heading)',
-                    // Mobile: 1.5rem, Desktop: scales between 2rem and 3.5rem
-                    fontSize: isMobile ? '1.5rem' : 'clamp(3rem, 2vw, 3.5rem)',
-                    color: 'var(--euphuism-orange)', // Euphuism Orange
+                    fontSize: isMobile ? '1.25rem' : 'clamp(2rem, 2.5vw, 3rem)',
+                    color: 'var(--euphuism-orange)',
                     textAlign: 'center',
-                    marginBottom: isMobile ? '-8rem' : '-5rem', // ← Mobile: less gap, Desktop: normal gap
+                    margin: `0 0 ${SECTION_SPACING} 0`,
                     textTransform: 'uppercase',
                     letterSpacing: '0.1em',
+                    zIndex: 20,
                 }}
-                className="w-[79vw] md:w-full"
             >
                 Our Event Partners :)
             </h2>
 
-            {/* Gallery Container */}
-            <div
+            {/* Gallery Background Section */}
+            <section
+                id="sponsors"
                 style={{
                     width: '100%',
-                    height: '350px',
+                    aspectRatio: aspectRatio,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     position: 'relative',
+                    backgroundImage: isMobile ? 'url("/bg/gamusa2.png")' : 'url("/bg/gamusa.png")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '100% 100%',
+                    backgroundPosition: 'center',
+                    overflow: 'hidden',
+                    marginBottom: '5rem',
+                    zIndex: 20,
                 }}
-                className="flex justify-center"
             >
-                <SponsorGallery />
-            </div>
-        </section>
+                {/* Gallery Container */}
+                <div
+                    style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <SponsorGallery />
+                </div>
+            </section>
+        </div>
     );
 }

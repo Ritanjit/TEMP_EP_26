@@ -6,10 +6,13 @@
  * No Navbar, No Footer - just the content.
  * Used for landing page with full-screen hero image.
  * Includes the mystical "Whispering Soil" preloader.
+ * Includes View Transitions for smooth page navigation with loading animation.
  */
 
+import { ViewTransitions } from 'astro:transitions';
 import Preloader from '@components/react/Preloader/Preloader';
 import LenisScroll from '@components/LenisScroll.astro';
+import PageLoader from '@components/react/PageLoader';
 
 interface Props {
   title: string;
@@ -72,8 +75,16 @@ const siteUrl = import.meta.env.PUBLIC_SITE_URL || "https://euphuism.gcuniversit
         overflow-x: hidden;
       }
     </style>
+
+    <!-- View Transitions for smooth page navigation -->
+    <ViewTransitions />
   </head>
   <body>
+    <!-- Page Loader for navigation transitions (persisted across View Transitions) -->
+    <div transition:persist="page-loader">
+      <PageLoader client:load text="Loading..." />
+    </div>
+
     <!-- Smooth Scroll -->
     <LenisScroll />
 

@@ -1,0 +1,60 @@
+---
+/**
+ * AdminLayout.astro
+ * 
+ * Server-side rendered layout for admin pages.
+ * Provides sidebar navigation and consistent styling.
+ */
+export const prerender = false;
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{title} | Euphuism Admin</title>
+  <style is:global>
+    @import "../globals.css";
+  </style>
+</head>
+<body>
+  <div class="admin-container flex min-h-screen bg-[var(--color-bg-dark)] text-white">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar w-64 bg-[var(--color-bg-card)] p-4">
+      <div class="logo mb-8">
+        <h1 class="text-xl font-bold gradient-text">Euphuism Admin</h1>
+      </div>
+      <nav class="admin-nav">
+        <ul class="space-y-2">
+          <li><a href="/admin" class="block p-2 hover:bg-white/10 rounded">Dashboard</a></li>
+          <li><a href="/admin/events" class="block p-2 hover:bg-white/10 rounded">Events</a></li>
+          <li><a href="/admin/sponsors" class="block p-2 hover:bg-white/10 rounded">Sponsors</a></li>
+          <li><a href="/admin/gallery" class="block p-2 hover:bg-white/10 rounded">Gallery</a></li>
+          <li><a href="/admin/media" class="block p-2 hover:bg-white/10 rounded">Media</a></li>
+        </ul>
+      </nav>
+      <div class="mt-auto pt-8">
+        <a href="/" class="block p-2 text-sm text-gray-400 hover:text-white hover:bg-white/10 rounded">
+          ← Back to Site
+        </a>
+      </div>
+    </aside>
+
+    <!-- Admin Content Area -->
+    <main class="admin-content flex-1 p-8">
+      <header class="mb-8">
+        <h2 class="text-2xl font-bold">{title}</h2>
+      </header>
+      <slot />
+    </main>
+  </div>
+</body>
+</html>

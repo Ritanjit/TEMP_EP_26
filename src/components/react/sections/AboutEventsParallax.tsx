@@ -33,7 +33,7 @@ import { keyEvents, type KeyEvent } from "@lib/data/events";
 export default function AboutEventsParallax() {
   // Mobile detection for responsive sizing
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 980);
@@ -47,9 +47,9 @@ export default function AboutEventsParallax() {
   const firstRow = keyEvents.slice(0, 5);
   const secondRow = keyEvents.slice(5, 10);
   const thirdRow = keyEvents.slice(10, 15);
-  
+
   const ref = useRef<HTMLDivElement>(null);
-  
+
   // Track scroll progress within this section
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -96,7 +96,7 @@ export default function AboutEventsParallax() {
       ref={ref}
       className="about-events-parallax"
       style={{
-        height: isMobile ? "160vh" : "400vh", // Reduced height on mobile
+        height: isMobile ? "250vh" : "400vh", // Reduced height on mobile
         paddingTop: isMobile ? "0" : "10rem",
         paddingBottom: isMobile ? "0" : "10rem",
         marginTop: isMobile ? "-50vh" : "0", // Pull up on mobile to close gap with hero
@@ -110,8 +110,20 @@ export default function AboutEventsParallax() {
         backgroundColor: "var(--euphuism-beige)",
       }}
     >
+      {/* Grain texture overlay */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          zIndex: 10,
+          backgroundImage: "url('https://www.transparenttextures.com/patterns/asfalt-dark.png')",
+          opacity: 0.58,
+        }}
+      />
+
       {/* About Section Header */}
-      <AboutHeader />
+      <AboutHeader/>
 
       {/* Animated Events Container */}
       <motion.div
@@ -120,6 +132,7 @@ export default function AboutEventsParallax() {
           rotateZ,
           translateY,
           opacity,
+          zIndex: 20,
         }}
       >
         {/* Key Events Subheading */}
@@ -180,6 +193,46 @@ export default function AboutEventsParallax() {
             />
           ))}
         </motion.div>
+
+        {/* View All Events Button - At bottom of section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "4rem",
+            paddingBottom: "2rem",
+          }}
+        >
+          <motion.a
+            href="/events"
+            whileHover={{
+              scale: 1.05,
+              boxShadow: "0 12px 35px rgba(208, 53, 3, 0.4)",
+            }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "1rem 2.5rem",
+              borderRadius: "9999px",
+              backgroundColor: "var(--euphuism-orange)",
+              color: "var(--euphuism-beige)",
+              fontFamily: "var(--font-heading)",
+              fontSize: "clamp(1rem, 2vw, 1.25rem)",
+              textDecoration: "none",
+              boxShadow: "0 6px 25px rgba(208, 53, 3, 0.3)",
+              cursor: "pointer",
+            }}
+          >
+            View All Events
+            <span style={{ fontSize: "1.2em" }}>→</span>
+          </motion.a>
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -203,6 +256,7 @@ function AboutHeader() {
         textAlign: "center", // Center align everything in the container
         left: 0,
         top: 0,
+        zIndex: 20,
       }}
     >
       <h1
@@ -226,12 +280,12 @@ function AboutHeader() {
           lineHeight: 1.7,
         }}
       >
-        Welcome to <strong>Euphuism 2026</strong> — the grand annual cultural extravaganza 
-        of Girijananda Chowdhury University. This year's theme, <em>"Roots & Resilience"</em>, 
+        Welcome to <strong>Euphuism 2026</strong> — the grand annual cultural extravaganza
+        of Girijananda Chowdhury University. This year's theme, <em>"Roots & Resilience"</em>,
         celebrates the rich heritage of Assam while embracing modern creativity and expression.
         <br /><br />
-        From mesmerizing folk dances to electrifying band performances, from thought-provoking 
-        theatre to artistic showcases — Euphuism brings together students, artists, and 
+        From mesmerizing folk dances to electrifying band performances, from thought-provoking
+        theatre to artistic showcases — Euphuism brings together students, artists, and
         visionaries to create unforgettable memories.
       </p>
     </div>
@@ -273,38 +327,6 @@ function KeyEventsHeading() {
       >
         Hover over the cards to discover our signature events
       </p>
-      
-      {/* View All Events Button */}
-      <motion.a
-        href="/events"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        whileHover={{ 
-          scale: 1.05,
-          boxShadow: "0 12px 35px rgba(208, 53, 3, 0.4)",
-        }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginTop: "1.5rem",
-          padding: "0.875rem 2rem",
-          borderRadius: "9999px",
-          backgroundColor: "var(--euphuism-orange)",
-          color: "var(--euphuism-beige)",
-          fontFamily: "var(--font-heading)",
-          fontSize: "clamp(0.875rem, 1.5vw, 1rem)",
-          textDecoration: "none",
-          boxShadow: "0 6px 25px rgba(208, 53, 3, 0.3)",
-          cursor: "pointer",
-        }}
-      >
-        View All Events
-        <span style={{ fontSize: "1.2em" }}>→</span>
-      </motion.a>
     </div>
   );
 }

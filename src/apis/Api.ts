@@ -33,7 +33,7 @@ function toBase64(num: number): string {
 	return result;
 }
 
-export const _DATABASE = "s3_euphuism_fest";
+export const _DATABASE = "s5_intern_database";
 export const _BASE_URL = "https://v5.frontql.dev";
 const local_host = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:4466" : "https://v5.frontql.dev");
 

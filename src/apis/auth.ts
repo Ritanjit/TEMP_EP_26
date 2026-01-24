@@ -64,7 +64,7 @@ export async function login(username: string, password: string): Promise<AuthRes
         if (response.session && typeof response.result === 'object') {
             localStorage.setItem(SESSION_KEY, response.session);
             localStorage.setItem(USER_KEY, JSON.stringify(response.result));
-
+            document.cookie = `${SESSION_KEY}=${response.session}; path=/`;
             return {
                 success: true,
                 user: response.result,

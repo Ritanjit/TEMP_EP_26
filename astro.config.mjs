@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import vercel from '@astrojs/vercel';
+import netlify from '@astrojs/netlify';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
@@ -17,10 +17,8 @@ export default defineConfig({
     react(), // React Islands support for 3D and interactive components
   ],
 
-  // Vercel deployment adapter for SSR
-  adapter: vercel({
-    webAnalytics: { enabled: true },
-  }),
+  // Netlify deployment adapter for SSR
+  adapter: netlify(),
 
   // Vite configuration for Tailwind CSS v4
   vite: {
